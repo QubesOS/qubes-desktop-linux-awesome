@@ -1,0 +1,35 @@
+From 4f32680caf20d0fd4af36ac6a2eb6e91ae2e7372 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:26:53 +0300
+Subject: [PATCH 1/6] Remove old code and reindent one line
+
+---
+ lib/qubes.lua.in | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index b732673..0f14156 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -157,17 +157,9 @@ end
+ function qubes.make_vm_menu(vmname, vmpath)
+     local menu = {}
+ 
+---    for desktop in io.popen('ls -1 ' .. vmpath .. '/apps/*.desktop'):lines() do
+---        local entry = parse_desktop_file(desktop)
+---      if entry['Icon'] == nil then
+---          entry['Icon'] = vmpath .. '/icon.png'
+---      end
+---        table.insert(menu, {entry['Name'], entry['Exec'], entry['Icon']})
+---    end
+-
+     for _, program in ipairs(menubar.utils.parse_dir(vmpath .. '/apps')) do
+         table.insert(menu, {program.Name, program.cmdline, program.icon_path})
+-end
++    end
+     return {vmname, menu, vmpath .. '/icon.png'}
+ end
+ 
+-- 
+2.7.4
+

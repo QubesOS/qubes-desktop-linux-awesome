@@ -1,0 +1,33 @@
+From 5cb6bb3d46c11c425afc6167e84be06f6d7a8f02 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:54:02 +0300
+Subject: [PATCH 4/6] Separate menuitem creator
+
+---
+ lib/qubes.lua.in | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index 9d38e15..66699d7 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -154,11 +154,15 @@ function qubes.get_colour_focus(c)
+     return qubes.get_label(c).colour_focus
+ end
+ 
++function qubes.make_menuitem(vm, program)
++    return {program.Name, program.cmdline, program.icon_path}
++end
++
+ function qubes.make_vm_menu(vm)
+     local menu = {}
+ 
+     for _, program in ipairs(menubar.utils.parse_dir(vm.path .. '/apps')) do
+-        table.insert(menu, {program.Name, program.cmdline, program.icon_path})
++        table.insert(menu, qubes.make_menuitem(vm, program))
+     end
+     return {vm.name, menu, vm.path .. '/icon.png'}
+ end
+-- 
+2.7.4
+

@@ -1,0 +1,64 @@
+From 7a55dbf06af3fe183d1fb84833732a60aa48ea85 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:58:11 +0300
+Subject: [PATCH 6/6] Add hooks to menu building to allow filtering & tweaks
+
+I've succesfully used these the filter hook for creating
+a separate submenu for templates and another for sys-.* VMs.
+
+I haven't played with the menuitem tweaking opportunities
+a replacement qubes.make_menuitem would offer but as it was
+easy to allow as a by-product of this change I see no harm
+done allowing also that and it makes things more consistent.
+---
+ lib/qubes.lua.in | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index 1ed6806..ec534c3 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -158,16 +158,19 @@ function qubes.make_menuitem(vm, program)
+     return {program.Name, program.cmdline, program.icon_path}
+ end
+ 
+-function qubes.make_vm_menu(vm)
++function qubes.make_vm_menu(vm, menuitemfunc)
+     local menu = {}
+ 
+     for _, program in ipairs(menubar.utils.parse_dir(vm.path .. '/apps')) do
+-        table.insert(menu, qubes.make_menuitem(vm, program))
++        local menuitem = menuitemfunc(vm, program)
++        if menuitem ~= nil then
++            table.insert(menu, menuitem)
++        end
+     end
+     return {vm.name, menu, vm.path .. '/icon.png'}
+ end
+ 
+-function qubes.make_menu()
++function qubes.make_menu(filter, menuitemfunc)
+     local menu = {}
+     for line in io.popen([[python -c "
+ import os.path
+@@ -183,7 +186,16 @@ print('\n'.join('{} {} {}'.format(vm.name, vm.type, vm.dir_path)
+         local vm = {}
+         vm.name, vm.type, vm.path = line:match('^(.+) (.+) (.+)$')
+         io.stderr:write('line=' .. line .. '\n')
+-        table.insert(menu, qubes.make_vm_menu(vm))
++        if menuitemfunc == nil then
++            menuitemfunc = qubes.make_menuitem
++        end
++        local menufunc = qubes.make_vm_menu
++        if filter ~= nil then
++            menufunc = filter(vm)
++        end
++        if menufunc ~= nil then
++            table.insert(menu, menufunc(vm, menuitemfunc))
++        end
+     end
+     return menu
+ end
+-- 
+2.7.4
+

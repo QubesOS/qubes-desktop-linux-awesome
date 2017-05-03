@@ -1,0 +1,52 @@
+From 1ed1a0214de6ec13b083f6fd14645d51d1ea9411 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:31:59 +0300
+Subject: [PATCH 2/6] Separate manager menuitem creation
+
+It needs to be added separately to menu to allow multiple calls
+to qubes.make_menu that would otherwise add the manager entry
+to every submenu.
+---
+ awesomerc.lua.in | 4 +++-
+ lib/qubes.lua.in | 7 +++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/awesomerc.lua.in b/awesomerc.lua.in
+index e36eb67..6fbc2ca 100644
+--- a/awesomerc.lua.in
++++ b/awesomerc.lua.in
+@@ -91,7 +91,9 @@ end
+ 
+ -- {{{ Menu
+ -- Create a laucher widget and a main menu
+-mymainmenu = awful.menu({ items = qubes.make_menu(), theme = { width = 300, height = 24 } })
++menuitems = qubes.make_menu()
++table.insert(menuitems, qubes.manager_menuitem())
++mymainmenu = awful.menu({ items = menuitems, theme = { width = 300, height = 24 } })
+ 
+ mylauncher = awful.widget.launcher({
+     image = '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png',
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index 0f14156..6b2a835 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -180,11 +180,14 @@ print('\n'.join('{} {}'.format(vm.name, vm.dir_path)
+         io.stderr:write('line=' .. line .. '\n')
+         table.insert(menu, qubes.make_vm_menu(vmname, vmpath))
+     end
+-    table.insert(menu, {'Qubes Manager', 'qubes-manager',
+-        '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png'})
+     return menu
+ end
+ 
++function qubes.manager_menuitem()
++    return {'Qubes Manager', 'qubes-manager',
++        '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png'}
++end
++
+ return qubes
+ 
+ -- vim: ts=4 sw=4 et
+-- 
+2.7.4
+

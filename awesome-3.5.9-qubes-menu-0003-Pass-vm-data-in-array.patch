@@ -1,0 +1,46 @@
+From 8ef7c389aa0b368a7f584e2e6140489d75fea9f6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:48:26 +0300
+Subject: [PATCH 3/6] Pass vm data in array
+
+---
+ lib/qubes.lua.in | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index 6b2a835..9d38e15 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -154,13 +154,13 @@ function qubes.get_colour_focus(c)
+     return qubes.get_label(c).colour_focus
+ end
+ 
+-function qubes.make_vm_menu(vmname, vmpath)
++function qubes.make_vm_menu(vm)
+     local menu = {}
+ 
+-    for _, program in ipairs(menubar.utils.parse_dir(vmpath .. '/apps')) do
++    for _, program in ipairs(menubar.utils.parse_dir(vm.path .. '/apps')) do
+         table.insert(menu, {program.Name, program.cmdline, program.icon_path})
+     end
+-    return {vmname, menu, vmpath .. '/icon.png'}
++    return {vm.name, menu, vm.path .. '/icon.png'}
+ end
+ 
+ function qubes.make_menu()
+@@ -176,9 +176,10 @@ print('\n'.join('{} {}'.format(vm.name, vm.dir_path)
+     for vm in sorted(qvmc.values(), key=lambda vm: vm.name)
+     if os.path.isdir(vm.dir_path)))
+ "]]):lines() do
+-        local vmname, vmpath = line:match('^(.+) (.+)$')
++        local vm = {}
++        vm.name, vm.path = line:match('^(.+) (.+)$')
+         io.stderr:write('line=' .. line .. '\n')
+-        table.insert(menu, qubes.make_vm_menu(vmname, vmpath))
++        table.insert(menu, qubes.make_vm_menu(vm))
+     end
+     return menu
+ end
+-- 
+2.7.4
+

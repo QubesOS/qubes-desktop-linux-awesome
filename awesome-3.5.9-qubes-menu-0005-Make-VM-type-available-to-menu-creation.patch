@@ -1,0 +1,31 @@
+From d8535ce1f0ab154800bf8cc7ae2398e2b3305db6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@helsinki.fi>
+Date: Tue, 2 May 2017 23:55:35 +0300
+Subject: [PATCH 5/6] Make VM type available to menu creation
+
+---
+ lib/qubes.lua.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/qubes.lua.in b/lib/qubes.lua.in
+index 66699d7..1ed6806 100644
+--- a/lib/qubes.lua.in
++++ b/lib/qubes.lua.in
+@@ -176,12 +176,12 @@ qvmc = qubes.qubes.QubesVmCollection()
+ qvmc.lock_db_for_reading()
+ qvmc.load()
+ qvmc.unlock_db()
+-print('\n'.join('{} {}'.format(vm.name, vm.dir_path)
++print('\n'.join('{} {} {}'.format(vm.name, vm.type, vm.dir_path)
+     for vm in sorted(qvmc.values(), key=lambda vm: vm.name)
+     if os.path.isdir(vm.dir_path)))
+ "]]):lines() do
+         local vm = {}
+-        vm.name, vm.path = line:match('^(.+) (.+)$')
++        vm.name, vm.type, vm.path = line:match('^(.+) (.+) (.+)$')
+         io.stderr:write('line=' .. line .. '\n')
+         table.insert(menu, qubes.make_vm_menu(vm))
+     end
+-- 
+2.7.4
+

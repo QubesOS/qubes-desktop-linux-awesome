@@ -16,7 +16,7 @@ ready for installing.
 
 1. Clone this repository
 ```
-git clone https://gitlab.com/markwalters1009/qubes-desktop-linux-awesome.git
+git clone https://github.com/QubesOS/qubes-desktop-linux-awesome
 ```
 2. Enter the repository
 ```
@@ -50,7 +50,7 @@ cp ../rpm/x86_64/awesome-3.5.9-1.fc23.x86_64.rpm /tmp/awesome.rpm
 The full list of commands is
 
 ```
-git clone https://gitlab.com/markwalters1009/qubes-desktop-linux-awesome.git
+git clone https://github.com/QubesOS/qubes-desktop-linux-awesome
 cd qubes-desktop-linux-awesome/
 sudo dnf install @development-tools fedora-packager rpmdevtools
 sudo dnf builddep awesome.spec

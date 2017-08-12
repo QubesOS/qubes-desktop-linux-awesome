@@ -1,0 +1,53 @@
+diff -uNr ../qubes-desktop-linux-awesome/awesome-3.5.9/lib/qubes.lua.in awesome-mine/lib/qubes.lua.in
+--- ../qubes-desktop-linux-awesome/awesome-3.5.9/lib/qubes.lua.in	2017-08-12 20:20:35.354000000 +0200
++++ awesome-mine/lib/qubes.lua.in	2017-08-12 21:07:38.985000000 +0200
+@@ -91,6 +91,17 @@
+     return entry
+ end
+ 
++local function ensure_min_luminance(colour, minLuminance)
++    local r, g, b = color.parse_color(colour)
++
++    h, l, s = rgb_to_hls(r, g, b)
++    l = math.max(l,minLuminance)
++    r, g, b = hls_to_rgb(h, l, s)
++
++    return string.format('#%02x%02x%02x',
++        math.floor(r * 0xff), math.floor(g * 0xff), math.floor(b * 0xff))
++end
++
+ local function shift_luminance(colour, factor)
+     local r, g, b = color.parse_color(colour)
+ 
+@@ -103,10 +114,15 @@
+ end
+ 
+ function qubes.init()
++    local minLuminance = 0.3
++    local shiftUnfocused = 0.5
++    local blackSafe = ensure_min_luminance("#000000", minLuminance)
++
+     -- read labels
+     qubes.labels = { ['*'] = {
+-        colour = beautiful.border_normal,
+-        colour_focus = "#000000" 
++	--all other (= dom0) windows
++        colour = shift_luminance(blackSafe, shiftUnfocused),
++        colour_focus = blackSafe 
+      } }
+ 
+     local data = util.pread([[python -c "
+@@ -116,9 +132,11 @@
+ "]])
+     for index, colour in string.gmatch(data, '(%d):0x([0-9a-f]+)') do
+         colour = '#' .. colour
++	--ensure min luminance so we can shift it for unfocused windows
++        colour = ensure_min_luminance(colour,minLuminance)
+ 
+-        qubes.labels[index] = { colour = shift_luminance(colour, 0.5),
+-            colour_focus = shift_luminance(colour, 1.0) }
++        qubes.labels[index] = { colour = shift_luminance(colour, shiftUnfocused),
++            colour_focus = colour }
+     end
+ end
+ 

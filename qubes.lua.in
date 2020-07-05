@@ -176,7 +176,7 @@ end
 function qubes.make_vm_menu(vmname, desktop_files, menuitemfunc, vmicon)
     local menu = {}
     local menuitemfunc = menuitemfunc or qubes.make_menuitem
-    local vmicon = vmicon or '/var/lib/qubes/appvms/' .. vmname .. '/icon.png'
+    local vmicon = vmicon or '/usr/share/icons/hicolor/128x128/apps/qubes-manager.png'
 
     if vmname == nil then return nil end
 

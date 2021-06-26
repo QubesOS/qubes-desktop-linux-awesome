@@ -1,4 +1,4 @@
-ifneq ($(DIST),centos7)
+ifeq (,$(findstring centos,$(DISTRIBUTION)))
 RPM_SPEC_FILES := awesome.spec
 endif
 

@@ -181,9 +181,14 @@ end
 function qubes.make_vm_menu(vmname, desktop_files, menuitemfunc, vmicon)
     local menu = {}
     local menuitemfunc = menuitemfunc or qubes.make_menuitem
-    local vmicon = vmicon or '/var/lib/qubes/appvms/' .. vmname .. '/icon.png'
 
     if vmname == nil then return nil end
+
+    local vmicon = vmicon
+    if vmicon == nil then
+        vmicon_name = pread('qvm-prefs -- ' .. vmname .. ' icon'):sub(1, -2)
+        vmicon = '/usr/share/icons/hicolor/128x128/devices/' .. vmicon_name .. '.png'
+    end
 
     for _, dfile in pairs(desktop_files) do
         if dfile ~= nil then

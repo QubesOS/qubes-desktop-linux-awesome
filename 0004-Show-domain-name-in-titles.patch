@@ -1,0 +1,45 @@
+From 2be77bd99d5e5e7be41df80fb16f4ac836d875b5 Mon Sep 17 00:00:00 2001
+From: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
+Date: Mon, 21 Aug 2017 13:07:33 +0200
+Subject: [PATCH] Show domain name in titles
+
+Signed-off-by: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
+---
+ awesomerc.lua | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/awesomerc.lua b/awesomerc.lua
+index 63431c72..d6da869e 100644
+--- a/awesomerc.lua
++++ b/awesomerc.lua
+@@ -21,6 +21,18 @@ require("awful.hotkeys_popup.keys")
+ 
+ local qubes = require("qubes")
+ 
++function titlewidget(c)
++    local textbox = require("wibox.widget.textbox")
++    local ret = textbox()
++
++    local function update()
++        ret:set_text( c.prefix .. c.name or "<unknown>")
++    end
++    c:connect_signal("property::name", update)
++    update()
++
++    return ret
++end
+ 
+ -- {{{ Error handling
+ -- @DOC_ERROR_HANDLING@
+@@ -567,7 +579,7 @@ client.connect_signal("request::titlebars", function(c)
+         { -- Middle
+             { -- Title
+                 align  = "center",
+-                widget = awful.titlebar.widget.titlewidget(c)
++                widget = titlewidget(c)
+             },
+             buttons = buttons,
+             layout  = wibox.layout.flex.horizontal
+-- 
+2.14.1
+

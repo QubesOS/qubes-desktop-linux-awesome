@@ -16,7 +16,7 @@ SHELL := /bin/bash
 
 %: %.sha512
 	@$(FETCH_CMD) $@$(UNTRUSTED_SUFF) $(DISTFILES_MIRROR)$@
-	@sha512sum --status -c <(printf "$$(cat $<)  -\n") <$@$(UNTRUSTED_SUFF) || \
+	@sha512sum --status -c <(printf "$$(cat $<)  $@$(UNTRUSTED_SUFF)\n") || \
 			{ echo "Wrong SHA512 checksum on $@$(UNTRUSTED_SUFF)!"; exit 1; }
 	@mv $@$(UNTRUSTED_SUFF) $@
 

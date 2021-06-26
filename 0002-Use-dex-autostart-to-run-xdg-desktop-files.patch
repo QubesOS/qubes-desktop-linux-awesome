@@ -1,0 +1,30 @@
+From eeb68077eb9cb8e91a27b07329528d619e6a6030 Mon Sep 17 00:00:00 2001
+From: Mark Walters <markwalters1009@gmail.com>
+Date: Sat, 10 Sep 2016 18:07:26 +0100
+Subject: [PATCH] Use dex-autostart to run xdg desktop files
+
+We set dex to run all the desktop files for XFCE as there
+are some things we do want (in particular xscreensaver) that are
+listed as XFCE only. It may start some things that are not needed,
+(eg xfsettingsd) but this does not seem to cause a problem.
+
+Signed-off-by: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
+---
+ awesomerc.lua | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/awesomerc.lua b/awesomerc.lua
+index 91e684ee..dc4babd3 100644
+--- a/awesomerc.lua
++++ b/awesomerc.lua
+@@ -587,3 +587,7 @@ end)
+ client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+ -- }}}
++
++-- Use dex to run the xdg autostart files
++-- for the moment run the ones for XFCE
++awful.spawn('bash -c "pgrep -f -a mqui.tray | grep -v $$ || dex -a -e XFCE"')
+-- 
+2.14.1
+

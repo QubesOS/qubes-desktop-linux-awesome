@@ -1,0 +1,29 @@
+From 1f26ce8dcb79459914e8ea4fff5ec2a75dfab1f5 Mon Sep 17 00:00:00 2001
+From: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
+Date: Mon, 18 Sep 2017 15:48:58 +0200
+Subject: [PATCH] Add QubesOS specific menu
+
+Signed-off-by: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
+---
+ awesomerc.lua | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/awesomerc.lua b/awesomerc.lua
+index d6da869e..a01cdec6 100644
+--- a/awesomerc.lua
++++ b/awesomerc.lua
+@@ -111,10 +111,7 @@ myawesomemenu = {
+    { "quit", function() awesome.quit() end },
+ }
+ 
+-mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
+-                                    { "open terminal", terminal }
+-                                  }
+-                        })
++mymainmenu = awful.menu({ items = qubes.make_menu() })
+ 
+ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+                                      menu = mymainmenu })
+-- 
+2.14.1
+

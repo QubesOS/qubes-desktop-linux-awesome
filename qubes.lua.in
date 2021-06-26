@@ -112,24 +112,32 @@ local function color_dec2hex(dec_color,default)
     end
 end
 
+local function pread(cmd)
+    local f, err = io.popen(cmd, 'r')
+    if f then
+        local data = f:read("*all")
+        f:close()
+        return data
+    else
+        error("Command failed:\n" .. cmd .. "\nwith error:\n" .. err )
+    end
+end
+
 function qubes.manage(c)
-    local data = util.pread('xprop -id ' .. c.window
+    local data = pread('xprop -id ' .. c.window
         .. ' -notype _QUBES_VMNAME _QUBES_LABEL _QUBES_LABEL_COLOR')
 
     --set some window properties for information
-    client.property.set(c, 'qubes_vmname',
-        string.match(data, '_QUBES_VMNAME = "(.+)"') or 'dom0')
-    client.property.set(c, 'qubes_label',
-        string.match(data, '_QUBES_LABEL = (%d+)') or '*')
+    c.qubes_vmname = string.match(data, '_QUBES_VMNAME = "(.+)"') or 'dom0'
+    c.qubes_label = string.match(data, '_QUBES_LABEL = (%d+)') or '*'
     local qcolor = color_dec2hex(string.match(data, '_QUBES_LABEL_COLOR = (%d+)'), '#000000')
-    client.property.set(c, 'qubes_label_color', qcolor)
-    client.property.set(c, 'prefix',
-        '[' .. client.property.get(c, 'qubes_vmname') .. '] ')
+    c.qubes_label_color = qcolor
+    c.prefix = '[' .. c.qubes_vmname .. '] '
 
     --set the focus & unfocus colors for later usage
     local qcolor_focus = ensure_min_luminance(qcolor, 0.3)
-    client.property.set(c, 'qubes_label_color_focus', qcolor_focus)
-    client.property.set(c, 'qubes_label_color_unfocus', shift_luminance(qcolor_focus, 0.6))
+    c.qubes_label_color_focus = qcolor_focus
+    c.qubes_label_color_unfocus = shift_luminance(qcolor_focus, 0.6)
 
     --set the initial border color
     qubes.set_border_colour(c)
@@ -144,21 +152,18 @@ function qubes.set_border_colour(c)
     end
 end
 
-local function get_colour_by_state(c, state)
-    local color = client.property.get(c, state)
-    if color == nil or color == '' then
-        qubes.manage(c)
-        color = client.property.get(c, state)
-    end
-    return color
-end
-
 function qubes.get_colour(c)
-    return get_colour_by_state(c, 'qubes_label_color_unfocus')
+    if c.qubes_label_color_unfocus == nil then
+        qubes.manage(c)
+    end
+    return c.qubes_label_color_unfocus
 end
 
 function qubes.get_colour_focus(c)
-    return get_colour_by_state(c, 'qubes_label_color_focus')
+    if c.qubes_label_color_focus == nil then
+        qubes.manage(c)
+    end
+    return c.qubes_label_color_focus
 end
 
 local function is_accessible(path)

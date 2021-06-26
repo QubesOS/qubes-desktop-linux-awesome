@@ -189,7 +189,7 @@ function qubes.make_vm_menu(vmname, desktop_files, menuitemfunc, vmicon)
         if dfile ~= nil then
             local dpath = HOME .. '/.local/share/applications/' .. dfile
             if is_accessible(dpath) then
-                local menuitem = menuitemfunc(vmname, menubar.utils.parse(dpath))
+                local menuitem = menuitemfunc(vmname, menubar.utils.parse_desktop_file(dpath))
                 if menuitem ~= nil then table.insert(menu, menuitem) end
             end
         end

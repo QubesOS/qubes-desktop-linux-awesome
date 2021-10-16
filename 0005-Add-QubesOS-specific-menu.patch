@@ -12,7 +12,7 @@ diff --git a/awesomerc.lua b/awesomerc.lua
 index d6da869e..a01cdec6 100644
 --- a/awesomerc.lua
 +++ b/awesomerc.lua
-@@ -111,10 +111,7 @@ myawesomemenu = {
+@@ -96,12 +96,9 @@
     { "quit", function() awesome.quit() end },
  }
  
@@ -25,6 +25,5 @@ index d6da869e..a01cdec6 100644
 -mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 +mylauncher = awful.widget.launcher({ image = '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png',
                                       menu = mymainmenu })
--- 
-2.14.1
-
+ 
+ -- Menubar configuration

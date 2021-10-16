@@ -22,7 +22,8 @@ index d6da869e..a01cdec6 100644
 -                        })
 +mymainmenu = awful.menu({ items = qubes.make_menu() })
  
- mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
++mylauncher = awful.widget.launcher({ image = '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png',
                                       menu = mymainmenu })
 -- 
 2.14.1

@@ -23,8 +23,8 @@ index 91e684ee..dc4babd3 100644
  -- }}}
 +
 +-- Use dex to run the xdg autostart files
-+-- for the moment run the ones for XFCE
-+awful.spawn('bash -c "pgrep -f -a mqui.tray | grep -v $$ || dex -a -e XFCE"')
++-- for now run the ones for XFCE
++awful.spawn('bash -c "pgrep -f -a qvm-start-daemon | grep -v $$ || dex-autostart -a -e XFCE"')
 -- 
 2.14.1
 

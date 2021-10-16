@@ -74,7 +74,7 @@ Requires:	rlwrap
 # default editor
 Recommends:	vi
 # XDG Autostart functionality
-Requires:	dex
+Requires:	dex-autostart
 
 
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}

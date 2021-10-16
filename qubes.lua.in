@@ -223,7 +223,7 @@ local function parse_menufile_dir(menu, menufile_dir, filter, menuitemfunc, menu
         local nmatch = string.match(line, '<Name>(.*)</Name>')
         if nmatch ~= nil and nmatch ~= "Applications" then
                 --name of the 1st level menu:
-                last_name = string.match(nmatch,'^(.*)-vm$') or nmatch
+                last_name = string.match(nmatch,'^qubes%-vm%-directory%-(.*)$') or nmatch
                 if last_name ~= nil then table.insert(menu, menufunc(last_name, last_desktop_files, menuitemfunc, menuicon)) end
                 if filter ~= nil then menufunc = filter(last_name) end
                 last_desktop_files = {}

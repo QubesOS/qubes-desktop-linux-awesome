@@ -1,0 +1,26 @@
+Subject: [PATCH] Always use the same tasklist label incl. VM name
+
+Upstream uses WM_ICON_NAME / c.icon_name by default when windows are
+minimized to the tasklist. This however would hide the VM name set in
+c.name.
+
+Workaround for https://github.com/awesomeWM/awesome/issues/3476
+
+---
+diff --git a/lib/awful/widget/tasklist.lua b/lib/awful/widget/tasklist.lua
+index 332927b..9735bb6 100644
+--- a/lib/awful/widget/tasklist.lua
++++ b/lib/awful/widget/tasklist.lua
+@@ -311,12 +311,7 @@ local function tasklist_label(c, args, tb)
+     end
+
+     if not disable_task_name then
+-        if c.minimized then
+-            name = name .. (gstring.xml_escape(c.icon_name) or gstring.xml_escape(c.name) or
+-                            gstring.xml_escape("<untitled>"))
+-        else
+             name = name .. (gstring.xml_escape(c.name) or gstring.xml_escape("<untitled>"))
+-        end
+     end
+
+     local focused = capi.client.focus == c

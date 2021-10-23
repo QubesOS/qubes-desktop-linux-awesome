@@ -14,6 +14,7 @@ Patch2:		0002-Use-dex-autostart-to-run-xdg-desktop-files.patch
 Patch3:		0003-Show-qubes-color-borders.patch
 Patch4:		0004-Show-domain-name-in-titles.patch
 Patch5:		0005-Add-QubesOS-specific-menu.patch
+Patch6:		0006-Same-tasklist-label-when-minimized.patch
 
 # short-term fix for FTBFS with GCC10
 %define _legacy_common_support 1

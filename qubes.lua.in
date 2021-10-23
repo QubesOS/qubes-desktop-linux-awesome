@@ -14,6 +14,7 @@ local table = table
 local client = require('awful.client')
 local util = require('awful.util')
 local color = require('gears.color')
+local gstring = require('gears.string')
 local beautiful = require('beautiful')
 local menubar = require('menubar')
 
@@ -132,7 +133,7 @@ function qubes.manage(c)
     c.qubes_label = string.match(data, '_QUBES_LABEL = (%d+)') or '*'
     local qcolor = color_dec2hex(string.match(data, '_QUBES_LABEL_COLOR = (%d+)'), '#000000')
     c.qubes_label_color = qcolor
-    c.prefix = '[' .. c.qubes_vmname .. '] '
+    c.qubes_prefix = '[' .. c.qubes_vmname .. '] '
 
     --set the focus & unfocus colors for later usage
     local qcolor_focus = ensure_min_luminance(qcolor, 0.3)
@@ -164,6 +165,16 @@ function qubes.get_colour_focus(c)
         qubes.manage(c)
     end
     return c.qubes_label_color_focus
+end
+
+function qubes.set_name(c)
+    if c.qubes_prefix == nil then
+        qubes.manage(c)
+    end
+    name = c.name or ''
+    if not gstring.startswith(name, c.qubes_prefix) then
+        c.name = c.qubes_prefix .. name
+    end
 end
 
 local function is_accessible(path)

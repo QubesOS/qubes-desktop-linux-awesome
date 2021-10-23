@@ -12,18 +12,18 @@ diff --git a/awesomerc.lua b/awesomerc.lua
 index d6da869e..a01cdec6 100644
 --- a/awesomerc.lua
 +++ b/awesomerc.lua
-@@ -96,12 +96,9 @@
+@@ -99,12 +99,9 @@ myawesomemenu = {
     { "quit", function() awesome.quit() end },
  }
- 
+
 -mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
 -                                    { "open terminal", terminal }
 -                                  }
 -                        })
 +mymainmenu = awful.menu({ items = qubes.make_menu() })
- 
+
 -mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 +mylauncher = awful.widget.launcher({ image = '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png',
                                       menu = mymainmenu })
- 
+
  -- Menubar configuration

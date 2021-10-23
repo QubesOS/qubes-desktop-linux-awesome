@@ -15,7 +15,7 @@ index dc4babd3..63431c72 100644
 @@ -19,6 +19,9 @@ local hotkeys_popup = require("awful.hotkeys_popup")
  -- when client with a matching name is opened:
  require("awful.hotkeys_popup.keys")
- 
+
 +local qubes = require("qubes")
 +
 +
@@ -25,7 +25,7 @@ index dc4babd3..63431c72 100644
 @@ -529,6 +532,7 @@ client.connect_signal("manage", function (c)
      -- i.e. put it at the end of others instead of setting it master.
      -- if not awesome.startup then awful.client.setslave(c) end
- 
+
 +    qubes.manage(c)
      if awesome.startup
        and not c.size_hints.user_position
@@ -33,7 +33,7 @@ index dc4babd3..63431c72 100644
 @@ -552,7 +556,9 @@ client.connect_signal("request::titlebars", function(c)
          end)
      )
- 
+
 -    awful.titlebar(c) : setup {
 +    qubes.manage(c)
 +    awful.titlebar(c, { bg_normal = qubes.get_colour(c),
@@ -41,15 +41,14 @@ index dc4babd3..63431c72 100644
          { -- Left
              awful.titlebar.widget.iconwidget(c),
              buttons = buttons,
-@@ -586,6 +592,8 @@ end)
+@@ -584,8 +590,8 @@ client.connect_signal("mouse::enter", function(c)
+ end)
+
  -- @DOC_BORDER@
- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
- client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 +client.connect_signal("focus", function(c) c.border_color = qubes.get_colour_focus(c) end)
 +client.connect_signal("unfocus", function(c) c.border_color = qubes.get_colour(c) end)
  -- }}}
- 
- -- Use dex to run the xdg autostart files
--- 
-2.30.2
 
+ -- Use dex to run the xdg autostart files

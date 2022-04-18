@@ -1,0 +1,12 @@
+host:
+  rpm:
+    spec:
+    - awesome.spec
+vm:
+  rpm:
+    spec:
+    - awesome.spec
+source:
+  files:
+  - url: https://raw.githubusercontent.com/awesomeWM/awesome-releases/master/awesome-4.3.tar.xz
+    sha512: awesome-4.3.tar.xz.sha512

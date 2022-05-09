@@ -1,10 +1,10 @@
 host:
   rpm:
-    spec:
+    build:
     - awesome.spec
 vm:
   rpm:
-    spec:
+    build:
     - awesome.spec
 source:
   files:

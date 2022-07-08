@@ -178,6 +178,7 @@ function qubes.set_name(c)
 end
 
 local function is_accessible(path)
+    if path == nil then return false end
     return os.rename(path, path) and true or false
 end
 

@@ -61,6 +61,7 @@ BuildRequires:	lua-lgi >= 0.8.0
 BuildRequires:	pkgconfig(pango) >= 1.19.3
 BuildRequires:	pkgconfig(pangocairo) >= 1.19.3
 Requires:	qubes-desktop-linux-common
+Requires:	qubes-desktop-linux-menu
 Requires:	lua-lgi >= 0.8.0
 # next two loaded via lgi
 Requires:	pango%{?_isa} >= 1.19.3

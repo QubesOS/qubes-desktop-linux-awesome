@@ -5,22 +5,14 @@
 -- license: GPL-2+
 ----------------------------------------------------------------------------
 
-local io = io
 local math = math
 local string = string
-local tonumber = tonumber
-local table = table
 
 local client = require('awful.client')
-local util = require('awful.util')
 local color = require('gears.color')
 local gstring = require('gears.string')
-local beautiful = require('beautiful')
-local menubar = require('menubar')
 
 local qubes = {}
-
-local HOME = os.getenv("HOME")
 
 -- the following three functions are lifted from
 --  /usr/lib64/python2.7/colorsys.py
@@ -175,92 +167,6 @@ function qubes.set_name(c)
     if not gstring.startswith(name, c.qubes_prefix) then
         c.name = c.qubes_prefix .. name
     end
-end
-
-local function is_accessible(path)
-    if path == nil then return false end
-    return os.rename(path, path) and true or false
-end
-
-function qubes.make_menuitem(vm, program)
-    local appicon = program.icon_path
-    if not is_accessible(appicon) then appicon = nil end
-
-    return {program.Name, program.cmdline, appicon}
-end
-
---menuitemfunc & vmicon are optional parameters
-function qubes.make_vm_menu(vmname, desktop_files, menuitemfunc, vmicon)
-    local menu = {}
-    local menuitemfunc = menuitemfunc or qubes.make_menuitem
-
-    if vmname == nil then return nil end
-
-    local vmicon = vmicon
-    if vmicon == nil then
-        vmicon_name = pread('qvm-prefs -- ' .. vmname .. ' icon'):sub(1, -2)
-        vmicon = '/usr/share/icons/hicolor/128x128/devices/' .. vmicon_name .. '.png'
-    end
-
-    for _, dfile in pairs(desktop_files) do
-        if dfile ~= nil then
-            local dpath = HOME .. '/.local/share/applications/' .. dfile
-            if is_accessible(dpath) then
-                local menuitem = menuitemfunc(vmname, menubar.utils.parse_desktop_file(dpath))
-                if menuitem ~= nil then table.insert(menu, menuitem) end
-            end
-        end
-    end
-
-    if next(menu) == nil then
-        return nil
-    else
-        --NOTE: awesome will not display menu entries with invalid icon paths
-        return {vmname, menu, vmicon}
-    end
-end
-
---filter, menuitemfunc & menuicon are optional parameters
---menu is an output parameter passed by reference
-local function parse_menufile_dir(menu, menufile_dir, filter, menuitemfunc, menuicon)
-    local menufunc = qubes.make_vm_menu
-    local menuitemfunc = menuitemfunc or qubes.make_menuitem
-    
-    --since awesome only supports .desktop files, but Qubes also uses .menu files, we "parse" the .menu files with sed to find the relevant .desktop files for a VM
-    local last_desktop_files = {}
-    local last_name = nil
-    local cmd=[[bash -c 'for file in ]] .. menufile_dir .. [[/*.menu; do sort -b "$file"; done']]
-    --the sorting is needed to support arbitrary ordering of the xml tags
-    for line in io.popen(cmd):lines() do
-        local nmatch = string.match(line, '<Name>(.*)</Name>')
-        if nmatch ~= nil and nmatch ~= "Applications" then
-                --name of the 1st level menu:
-                last_name = string.match(nmatch,'^qubes%-vm%-directory%-(.*)$') or nmatch
-                if last_name ~= nil then table.insert(menu, menufunc(last_name, last_desktop_files, menuitemfunc, menuicon)) end
-                if filter ~= nil then menufunc = filter(last_name) end
-                last_desktop_files = {}
-        else
-                --potential desktop file:
-                local fmatch = string.match(line, '<Filename>(.*%.desktop)</Filename>')
-                if fmatch ~= nil then table.insert(last_desktop_files, fmatch) end
-        end
-     end
-end
-
---filter & menuitemfunc are optional parameters
-function qubes.make_menu(filter, menuitemfunc)
-    local menu = {}
-
-    --add the awesome-specific menus
-    --this is enitrely optional and enables users to create xdg menu files at the below file path in order to populate the first menu entries (e.g. for awesome-specific control tools)
-    --the desktop files referenced from the .menu files must be stored at ~/.local/share/applications/
-    --it will remain invisible until that directory has .menu files referencing valid .desktop files
-    parse_menufile_dir(menu, '~/.config/awesome/xdg-menu', filter, menuitemfunc, '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png')
-
-    --add the VM application menus
-    parse_menufile_dir(menu, '~/.config/menus/applications-merged', filter, menuitemfunc)
-
-    return menu
 end
 
 return qubes

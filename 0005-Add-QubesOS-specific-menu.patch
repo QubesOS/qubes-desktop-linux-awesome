@@ -5,25 +5,49 @@ Subject: [PATCH] Add QubesOS specific menu
 
 Signed-off-by: Bahtiar `kalkin-` Gadimov <bahtiar@gadimov.de>
 ---
- awesomerc.lua | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/awesomerc.lua b/awesomerc.lua
 index d6da869e..a01cdec6 100644
 --- a/awesomerc.lua
 +++ b/awesomerc.lua
-@@ -99,12 +99,9 @@ myawesomemenu = {
+@@ -99,13 +99,8 @@
     { "quit", function() awesome.quit() end },
  }
-
+ 
 -mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
 -                                    { "open terminal", terminal }
 -                                  }
 -                        })
-+mymainmenu = awful.menu({ items = qubes.make_menu() })
-
+-
 -mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+-                                     menu = mymainmenu })
 +mylauncher = awful.widget.launcher({ image = '/usr/share/icons/hicolor/16x16/apps/qubes-logo-icon.png',
-                                      menu = mymainmenu })
-
++                                     command = 'qubes-app-menu' })
+ 
  -- Menubar configuration
+ menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+@@ -237,7 +232,6 @@
+ -- {{{ Mouse bindings
+ -- @DOC_ROOT_BUTTONS@
+ root.buttons(gears.table.join(
+-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+     awful.button({ }, 4, awful.tag.viewnext),
+     awful.button({ }, 5, awful.tag.viewprev)
+ ))
+@@ -267,8 +261,6 @@
+         end,
+         {description = "focus previous by index", group = "client"}
+     ),
+-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+-              {description = "show main menu", group = "awesome"}),
+ 
+     -- Layout manipulation
+     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
+@@ -483,6 +475,7 @@
+     -- Floating clients.
+     { rule_any = {
+         instance = {
++          "qubes-app-menu",
+           "DTA",  -- Firefox addon DownThemAll.
+           "copyq",  -- Includes session name in class.
+           "pinentry",

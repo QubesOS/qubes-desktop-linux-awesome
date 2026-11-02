@@ -15,6 +15,7 @@ Patch3:		0003-Show-qubes-color-borders.patch
 Patch4:		0004-Show-domain-name-in-titles.patch
 Patch5:		0005-Add-QubesOS-specific-menu.patch
 Patch6:		0006-Same-tasklist-label-when-minimized.patch
+Patch7:		0007-Fix-build-and-runtime-with-Lua-5.5.patch
 
 # short-term fix for FTBFS with GCC10
 %define _legacy_common_support 1
@@ -115,22 +116,19 @@ cp %{SOURCE1} lib/qubes.lua
 %patch -P 4 -p1
 %patch -P 5 -p1
 %patch -P 6 -p1
+%patch -P 7 -p1
 # fix shebang
 sed -i -e '1 s,^#!.*,#!%{_bindir}/bash,' utils/awesome-client
 
 %build
-mkdir build; pushd build
 %cmake -DAWESOME_DOC_PATH=%{_pkgdocdir} \
        -DSYSCONFDIR=%{_sysconfdir} \
-       ..
+       -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 %cmake_build
-popd
 
 
 %install
-pushd build
 %cmake_install
-popd
 
 # verify desktop file
 desktop-file-validate %{buildroot}%{_datadir}/xsessions/%{name}.desktop

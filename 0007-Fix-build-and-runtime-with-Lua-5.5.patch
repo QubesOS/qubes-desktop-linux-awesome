@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Aire-One <aireone@aireone.xyz>
+Date: Fri, 15 May 2026 00:37:44 +0000
+Subject: [PATCH] Fix build and runtime with Lua 5.5
+
+Lua 5.5 makes for-loop control variables read-only, so assigning to
+them is now a compile error. In 4.3 this breaks loading the fair
+layout (and so rc.lua) and the docs build.
+
+Backported from upstream commit 05b8695d0433
+("chore: support build and tests for Lua 5.5"), only the parts that
+apply to 4.3.
+---
+ docs/ldoc.ltp                  | 6 +++---
+ lib/awful/layout/suit/fair.lua | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/docs/ldoc.ltp b/docs/ldoc.ltp
+index f7a7501..d270f1e 100644
+--- a/docs/ldoc.ltp
++++ b/docs/ldoc.ltp
+@@ -289,9 +289,9 @@
+   <p>$(M(ldoc.full_description,nil))</p>
+ # end
+ 
+-# for kind, mods in ldoc.kinds() do
+-<h2>$(kind)</h2>
+-# kind = kind:lower()
++# for k, mods in ldoc.kinds() do
++<h2>$(k)</h2>
++# kind = k:lower()
+ <table class="module_list">
+ # for m in mods() do
+ 	<tr>
+diff --git a/lib/awful/layout/suit/fair.lua b/lib/awful/layout/suit/fair.lua
+index 161b6ed..1a97cb9 100644
+--- a/lib/awful/layout/suit/fair.lua
++++ b/lib/awful/layout/suit/fair.lua
+@@ -41,8 +41,8 @@ local function do_fair(p, orientation)
+             cols = math.ceil(#cls / rows)
+         end
+ 
+-        for k, c in ipairs(cls) do
+-            k = k - 1
++        for i, c in ipairs(cls) do
++            local k = i - 1
+             local g = {}
+ 
+             local row, col

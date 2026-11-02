@@ -119,18 +119,14 @@ cp %{SOURCE1} lib/qubes.lua
 sed -i -e '1 s,^#!.*,#!%{_bindir}/bash,' utils/awesome-client
 
 %build
-mkdir build; pushd build
 %cmake -DAWESOME_DOC_PATH=%{_pkgdocdir} \
        -DSYSCONFDIR=%{_sysconfdir} \
-       ..
+       -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 %cmake_build
-popd
 
 
 %install
-pushd build
 %cmake_install
-popd
 
 # verify desktop file
 desktop-file-validate %{buildroot}%{_datadir}/xsessions/%{name}.desktop
